@@ -251,10 +251,17 @@ function parseItem(raw: RawItem): Item {
 }
 
 function parseAugment(raw: RawItem): Augment {
+  // Resolve @Variable@ templates using effects data
+  const effectVars: RawVariable[] = raw.effects
+    ? Object.entries(raw.effects).map(([name, value]) => ({
+        name,
+        value: value as number | number[] | null,
+      }))
+    : [];
   return {
     name: raw.name,
     apiName: raw.apiName,
-    description: stripMarkup(raw.desc),
+    description: resolveDescription(raw.desc, effectVars),
     effects: JSON.stringify(raw.effects),
   };
 }

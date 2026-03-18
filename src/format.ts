@@ -36,7 +36,7 @@ export function formatGetChampion(result: GetChampionResult): string {
     '**Stats:**',
     `HP: ${c.hp} | AD: ${c.ad} | Armor: ${c.armor} | MR: ${c.mr}`,
     `AS: ${c.attackSpeed} | Range: ${c.range} | Mana: ${c.initialMana}/${c.mana}`,
-    `Crit: ${c.critChance != null ? (c.critChance * 100).toFixed(0) : '?'}% (${c.critMultiplier ?? '?'}x)`,
+    `Crit: ${c.critChance != null ? (c.critChance * 100).toFixed(0) : '?'}% (${c.critMultiplier != null ? parseFloat(c.critMultiplier.toFixed(1)) : '?'}x)`,
     '',
     `**Ability — ${c.ability.name.trim()}**`,
     c.ability.description,
