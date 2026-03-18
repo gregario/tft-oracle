@@ -3,8 +3,8 @@
   "tools_count": 8,
   "tests_count": 101,
   "npm": { "published": true, "version": "0.1.0" },
-  "glama": { "listed": false, "score_badge": false, "ownership_claimed": false },
+  "glama": { "listed": true, "score_badge": true, "ownership_claimed": true },
   "mcp_registry": { "registered": true, "mcp_name": "io.github.gregario/tft-oracle" },
-  "awesome_mcp_servers": { "pr_submitted": false, "pr_url": null },
+  "awesome_mcp_servers": { "pr_submitted": true, "pr_url": "https://github.com/punkpeye/awesome-mcp-servers/pull/3429" },
   "github": { "release_tag": null, "sponsor_enabled": true }
 }
