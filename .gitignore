@@ -3,3 +3,4 @@ dist/
 *.tgz
 .tft-oracle/
 .DS_Store
+.mcpregistry_*
