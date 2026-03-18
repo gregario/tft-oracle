@@ -1,5 +1,7 @@
 # tft-oracle
 
+<!-- mcp-name: io.github.gregario/tft-oracle -->
+
 Teamfight Tactics MCP server — accurate champion, trait, item, and augment data for LLMs.
 
 <p align="center">
