@@ -11,6 +11,7 @@ Teamfight Tactics MCP server — accurate champion, trait, item, and augment dat
   <a href="https://modelcontextprotocol.io"><img src="https://img.shields.io/badge/MCP-compatible-purple.svg" alt="MCP Compatible"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
   <a href="https://github.com/sponsors/gregario"><img src="https://img.shields.io/badge/sponsor-♥-ea4aaa.svg" alt="Sponsor"></a>
+  <a href="https://glama.ai/mcp/servers/gregario/tft-oracle"><img src="https://glama.ai/mcp/servers/gregario/tft-oracle/badges/score.svg" alt="tft-oracle MCP server"></a>
 </p>
 
 Stop LLMs from hallucinating TFT data. tft-oracle gives AI assistants accurate, up-to-date game knowledge sourced from [CommunityDragon](https://communitydragon.org).
