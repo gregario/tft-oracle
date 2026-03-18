@@ -1,4 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {
   detectCurrentSet,
   getSetData,
@@ -590,6 +593,7 @@ describe('Database initialization', () => {
 
 describe('Full pipeline with mock data', () => {
   let db: Database.Database;
+  let tmpCacheDir: string;
 
   // Create a mock fetch that returns our mock data
   function createMockFetch(): typeof fetch {
@@ -606,12 +610,18 @@ describe('Full pipeline with mock data', () => {
 
   beforeEach(() => {
     db = getDatabase(':memory:');
+    tmpCacheDir = fs.mkdtempSync(path.join(os.tmpdir(), 'tft-oracle-test-'));
+  });
+
+  afterEach(() => {
+    fs.rmSync(tmpCacheDir, { recursive: true, force: true });
   });
 
   it('ingests all data types', async () => {
     const result = await runPipeline(db, {
       force: true,
       fetchFn: createMockFetch(),
+      cacheDir: tmpCacheDir,
     });
 
     expect(result.champions).toBe(2); // Filtered out special unit
@@ -623,7 +633,7 @@ describe('Full pipeline with mock data', () => {
   });
 
   it('stores metadata after ingestion', async () => {
-    await runPipeline(db, { force: true, fetchFn: createMockFetch() });
+    await runPipeline(db, { force: true, fetchFn: createMockFetch(), cacheDir: tmpCacheDir });
 
     expect(getMetadata(db, 'set_number')).toBe('16');
     expect(getMetadata(db, 'set_name')).toBe('TestSet');
@@ -631,7 +641,7 @@ describe('Full pipeline with mock data', () => {
   });
 
   it('populates champion_traits junction', async () => {
-    await runPipeline(db, { force: true, fetchFn: createMockFetch() });
+    await runPipeline(db, { force: true, fetchFn: createMockFetch(), cacheDir: tmpCacheDir });
 
     const rows = db.prepare('SELECT * FROM champion_traits ORDER BY champion_name, trait_name').all() as Array<{
       champion_name: string;
@@ -645,7 +655,7 @@ describe('Full pipeline with mock data', () => {
   });
 
   it('FTS search works after ingestion', async () => {
-    await runPipeline(db, { force: true, fetchFn: createMockFetch() });
+    await runPipeline(db, { force: true, fetchFn: createMockFetch(), cacheDir: tmpCacheDir });
 
     const results = db
       .prepare("SELECT name FROM champions_fts WHERE champions_fts MATCH 'Fireball'")
@@ -657,7 +667,7 @@ describe('Full pipeline with mock data', () => {
 
   it('skips fetch when data exists and not forced', async () => {
     // First run
-    await runPipeline(db, { force: true, fetchFn: createMockFetch() });
+    await runPipeline(db, { force: true, fetchFn: createMockFetch(), cacheDir: tmpCacheDir });
 
     // Second run without force — should skip
     let fetchCalled = false;
@@ -666,16 +676,16 @@ describe('Full pipeline with mock data', () => {
       return { ok: true, status: 200, text: async () => '{}', json: async () => ({}) };
     }) as unknown as typeof fetch;
 
-    await runPipeline(db, { fetchFn: trackingFetch });
+    await runPipeline(db, { fetchFn: trackingFetch, cacheDir: tmpCacheDir });
     expect(fetchCalled).toBe(false);
   });
 
   it('clears existing data before re-ingestion', async () => {
     // First run
-    await runPipeline(db, { force: true, fetchFn: createMockFetch() });
+    await runPipeline(db, { force: true, fetchFn: createMockFetch(), cacheDir: tmpCacheDir });
 
     // Force second run
-    await runPipeline(db, { force: true, fetchFn: createMockFetch() });
+    await runPipeline(db, { force: true, fetchFn: createMockFetch(), cacheDir: tmpCacheDir });
 
     // Should not have duplicates
     const count = (db.prepare('SELECT COUNT(*) as cnt FROM champions').get() as { cnt: number }).cnt;
@@ -683,7 +693,7 @@ describe('Full pipeline with mock data', () => {
   });
 
   it('items are queryable by component status', async () => {
-    await runPipeline(db, { force: true, fetchFn: createMockFetch() });
+    await runPipeline(db, { force: true, fetchFn: createMockFetch(), cacheDir: tmpCacheDir });
 
     const components = db.prepare('SELECT name FROM items WHERE isComponent = 1 ORDER BY name').all() as Array<{ name: string }>;
     expect(components.map(c => c.name)).toEqual(['B.F. Sword', 'Recurve Bow']);

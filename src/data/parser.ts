@@ -224,6 +224,9 @@ export function parseItems(
 
     if (!isBaseItem && !isCurrentSet) continue;
 
+    // Skip items with no name (e.g., TFT_Item_EmptyBag, TFT_Item_Blank)
+    if (!raw.name) continue;
+
     if (isAugment(raw)) {
       parsedAugments.push(parseAugment(raw));
     } else {
