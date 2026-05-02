@@ -38,6 +38,14 @@
     "node": ">=18"
   },
   "mcpName": "io.github.gregario/tft-oracle",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gregario/tft-oracle.git"
+  },
+  "homepage": "https://github.com/gregario/tft-oracle#readme",
+  "bugs": {
+    "url": "https://github.com/gregario/tft-oracle/issues"
+  },
   "keywords": [
     "mcp",
     "tft",
